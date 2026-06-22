@@ -1,0 +1,13 @@
+import { initTRPC, TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  return {
+    headers: opts.headers,
+  };
+};
+
+const t = initTRPC.context<typeof createTRPCContext>().create();
+
+export const createTRPCRouter = t.router;
+export const publicProcedure = t.procedure;
