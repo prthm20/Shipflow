@@ -4,10 +4,10 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "@trpc/server": "^11.0.0",
-    "@shipflow/db": "*",
     "@shipflow/auth": "*",
-    "zod": "^3.23.0"
+    "@shipflow/db": "*",
+    "@trpc/server": "^11.18.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
