@@ -1,0 +1,340 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// AUTH MODELS (BetterAuth required)
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+
+  memberships   OrgMember[]
+  featureRequests FeatureRequest[]
+  approvals     Approval[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ============================================
+// MULTI-TENANT MODELS
+// ============================================
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members   OrgMember[]
+  projects  Project[]
+  billing   Billing?
+}
+
+model OrgMember {
+  id        String   @id @default(cuid())
+  role      OrgRole  @default(MEMBER)
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orgId     String
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, orgId])
+}
+
+enum OrgRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+// ============================================
+// PROJECT + GITHUB
+// ============================================
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orgId       String
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  github      GitHubIntegration?
+  features    FeatureRequest[]
+}
+
+model GitHubIntegration {
+  id           String   @id @default(cuid())
+  repoOwner    String
+  repoName     String
+  repoFullName String
+  accessToken  String
+  webhookId    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  projectId    String   @unique
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  pullRequests PullRequest[]
+}
+
+// ============================================
+// FEATURE LIFECYCLE
+// ============================================
+
+model FeatureRequest {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  status      FeatureStatus @default(DRAFT)
+  source      String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  projectId   String
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User          @relation(fields: [authorId], references: [id])
+
+  prd         PRD?
+  approval    Approval?
+  pullRequest PullRequest?
+}
+
+enum FeatureStatus {
+  DRAFT
+  CLARIFYING
+  PRD_GENERATING
+  PRD_READY
+  TASKS_READY
+  IN_DEVELOPMENT
+  IN_REVIEW
+  FIX_NEEDED
+  PENDING_APPROVAL
+  APPROVED
+  SHIPPED
+  REJECTED
+}
+
+// ============================================
+// PRD + TASKS
+// ============================================
+
+model PRD {
+  id               String   @id @default(cuid())
+  problemStatement String
+  goals            String[]
+  nonGoals         String[]
+  userStories      Json
+  acceptanceCriteria String[]
+  edgeCases        String[]
+  successMetrics   String[]
+  rawContent       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  featureId        String   @unique
+  feature          FeatureRequest @relation(fields: [featureId], references: [id], onDelete: Cascade)
+
+  tasks            Task[]
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  status      TaskStatus @default(TODO)
+  priority    Priority   @default(MEDIUM)
+  order       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  prdId       String
+  prd         PRD        @relation(fields: [prdId], references: [id], onDelete: Cascade)
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// ============================================
+// PULL REQUESTS + AI REVIEW
+// ============================================
+
+model PullRequest {
+  id            String     @id @default(cuid())
+  prNumber      Int
+  title         String
+  branch        String
+  url           String
+  status        PRStatus   @default(OPEN)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  featureId     String     @unique
+  feature       FeatureRequest @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  githubId      String
+  github        GitHubIntegration @relation(fields: [githubId], references: [id])
+
+  reviews       AIReview[]
+}
+
+enum PRStatus {
+  OPEN
+  CHANGES_REQUESTED
+  APPROVED
+  MERGED
+  CLOSED
+}
+
+model AIReview {
+  id          String       @id @default(cuid())
+  summary     String
+  status      ReviewStatus @default(PENDING)
+  passed      Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+
+  prId        String
+  pr          PullRequest  @relation(fields: [prId], references: [id], onDelete: Cascade)
+
+  issues      ReviewIssue[]
+}
+
+enum ReviewStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model ReviewIssue {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  severity    Severity
+  filePath    String?
+  lineNumber  Int?
+  category    String?
+  createdAt   DateTime  @default(now())
+
+  reviewId    String
+  review      AIReview  @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+}
+
+enum Severity {
+  BLOCKING
+  NON_BLOCKING
+}
+
+// ============================================
+// HUMAN APPROVAL
+// ============================================
+
+model Approval {
+  id        String         @id @default(cuid())
+  decision  ApprovalDecision
+  notes     String?
+  createdAt DateTime       @default(now())
+
+  featureId String         @unique
+  feature   FeatureRequest @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  reviewerId String
+  reviewer  User           @relation(fields: [reviewerId], references: [id])
+}
+
+enum ApprovalDecision {
+  APPROVED
+  REJECTED
+}
+
+// ============================================
+// BILLING
+// ============================================
+
+model Billing {
+  id              String      @id @default(cuid())
+  plan            BillingPlan @default(FREE)
+  creditsUsed     Int         @default(0)
+  creditsLimit    Int         @default(100)
+  razorpayCustomerId String?
+  razorpaySubId   String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  orgId           String      @unique
+  org             Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+}
+
+enum BillingPlan {
+  FREE
+  PRO
+}

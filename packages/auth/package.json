@@ -1,0 +1,13 @@
+{
+  "name": "@shipflow/auth",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@shipflow/db": "*",
+    "better-auth": "^1.6.20"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
