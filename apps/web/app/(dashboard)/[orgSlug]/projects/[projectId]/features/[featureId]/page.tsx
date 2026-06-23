@@ -5,7 +5,8 @@ import { trpc } from "@/lib/trpc";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Bot } from "lucide-react";
+import { ArrowLeft, Bot , Zap} from "lucide-react";
+
 
 export default function FeatureDetailPage() {
   const { orgSlug, projectId, featureId } = useParams<{
@@ -100,6 +101,16 @@ export default function FeatureDetailPage() {
           </CardContent>
         </Card>
       )}
+
+      {feature.prd && (
+  <Button
+    onClick={() => router.push(`/${orgSlug}/projects/${projectId}/features/${featureId}/tasks`)}
+    className="w-full"
+  >
+    <Zap className="h-4 w-4 mr-2" />
+    View Task Board
+  </Button>
+)}
     </div>
   );
 }
