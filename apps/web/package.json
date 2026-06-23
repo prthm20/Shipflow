@@ -9,12 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.85",
+    "@ai-sdk/openai": "^3.0.74",
     "@phosphor-icons/react": "^2.1.10",
+    "@prisma/client": "^7.8.0",
     "@shipflow/auth": "^0.0.1",
     "@tanstack/react-query": "^5.101.0",
     "@trpc/client": "^11.18.0",
     "@trpc/next": "^11.18.0",
     "@trpc/react-query": "^11.18.0",
+    "ai": "^6.0.208",
     "better-auth": "^1.6.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

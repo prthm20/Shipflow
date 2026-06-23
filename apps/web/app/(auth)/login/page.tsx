@@ -12,18 +12,18 @@ export default function LoginPage() {
   const handleGitHubLogin = async () => {
     setLoading(true);
     await signIn.social({
-      provider: "github",
-      callbackURL: "/dashboard",
-    });
+  provider: "github",
+  callbackURL: "/onboarding",
+});
     setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    await signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-    });
+   await signIn.social({
+  provider: "google",
+  callbackURL: "/onboarding",
+});
     setLoading(false);
   };
 

@@ -26,43 +26,45 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-const navigation = [
-  {
-    label: "Overview",
-    items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "Projects", url: "/projects", icon: FolderKanban },
-    ],
-  },
-  {
-    label: "Workflow",
-    items: [
-      { title: "Feature Requests", url: "/features", icon: MessageSquarePlus },
-      { title: "PRDs", url: "/prds", icon: FileText },
-      { title: "Tasks", url: "/tasks", icon: CheckSquare },
-    ],
-  },
-  {
-    label: "Engineering",
-    items: [
-      { title: "GitHub", url: "/github", icon: GitBranch },
-      { title: "Pull Requests", url: "/pull-requests", icon: GitPullRequest },
-      { title: "Reviews", url: "/reviews", icon: CheckCircle },
-    ],
-  },
-  {
-    label: "Settings",
-    items: [
-      { title: "Billing", url: "/billing", icon: CreditCard },
-      { title: "Settings", url: "/settings", icon: Settings },
-    ],
-  },
-];
+import { usePathname, useParams } from "next/navigation";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const params = useParams<{ orgSlug?: string }>();
+  const orgSlug = params?.orgSlug ?? "";
+
+  const navigation = [
+    {
+      label: "Overview",
+      items: [
+        { title: "Dashboard", url: `/${orgSlug}/dashboard`, icon: LayoutDashboard },
+        { title: "Projects", url: `/${orgSlug}/projects`, icon: FolderKanban },
+      ],
+    },
+    {
+      label: "Workflow",
+      items: [
+        { title: "Feature Requests", url: `/${orgSlug}/features`, icon: MessageSquarePlus },
+        { title: "PRDs", url: `/${orgSlug}/prds`, icon: FileText },
+        { title: "Tasks", url: `/${orgSlug}/tasks`, icon: CheckSquare },
+      ],
+    },
+    {
+      label: "Engineering",
+      items: [
+        { title: "GitHub", url: `/${orgSlug}/github`, icon: GitBranch },
+        { title: "Pull Requests", url: `/${orgSlug}/pull-requests`, icon: GitPullRequest },
+        { title: "Reviews", url: `/${orgSlug}/reviews`, icon: CheckCircle },
+      ],
+    },
+    {
+      label: "Settings",
+      items: [
+        { title: "Billing", url: `/${orgSlug}/billing`, icon: CreditCard },
+        { title: "Settings", url: `/${orgSlug}/settings`, icon: Settings },
+      ],
+    },
+  ];
 
   return (
     <Sidebar>
