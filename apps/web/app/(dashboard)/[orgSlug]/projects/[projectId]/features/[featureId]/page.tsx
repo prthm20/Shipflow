@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Bot , Zap,GitPullRequest } from "lucide-react";
+import { ArrowLeft, Bot , Zap,GitPullRequest,CheckCircle } from "lucide-react";
 
 
 export default function FeatureDetailPage() {
@@ -119,6 +119,15 @@ export default function FeatureDetailPage() {
       <GitPullRequest className="h-4 w-4 mr-2" />
       AI Code Review
     </Button>
+
+    <Button
+  variant="secondary"
+  onClick={() => router.push(`/${orgSlug}/projects/${projectId}/features/${featureId}/approval`)}
+  className="w-full"
+>
+  <CheckCircle className="h-4 w-4 mr-2" />
+  Human Approval
+</Button>
   </div>
   
 )}
