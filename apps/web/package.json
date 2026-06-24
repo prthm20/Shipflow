@@ -11,6 +11,8 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.85",
     "@ai-sdk/openai": "^3.0.74",
+    "@octokit/rest": "^22.0.1",
+    "@octokit/webhooks": "^14.2.0",
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/client": "^7.8.0",
     "@shipflow/auth": "^0.0.1",

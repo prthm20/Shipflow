@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Bot , Zap} from "lucide-react";
+import { ArrowLeft, Bot , Zap,GitPullRequest } from "lucide-react";
 
 
 export default function FeatureDetailPage() {
@@ -103,6 +103,7 @@ export default function FeatureDetailPage() {
       )}
 
       {feature.prd && (
+        <div className="flex flex-col gap-2">
   <Button
     onClick={() => router.push(`/${orgSlug}/projects/${projectId}/features/${featureId}/tasks`)}
     className="w-full"
@@ -110,6 +111,16 @@ export default function FeatureDetailPage() {
     <Zap className="h-4 w-4 mr-2" />
     View Task Board
   </Button>
+  <Button
+      variant="outline"
+      onClick={() => router.push(`/${orgSlug}/projects/${projectId}/features/${featureId}/review`)}
+      className="w-full"
+    >
+      <GitPullRequest className="h-4 w-4 mr-2" />
+      AI Code Review
+    </Button>
+  </div>
+  
 )}
     </div>
   );
