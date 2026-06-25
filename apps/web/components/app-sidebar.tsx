@@ -33,7 +33,7 @@ export function AppSidebar() {
   const params = useParams<{ orgSlug?: string }>();
   const orgSlug = params?.orgSlug ?? "";
 
-  const navigation = [
+ const navigation = [
   {
     label: "Overview",
     items: [
@@ -42,9 +42,26 @@ export function AppSidebar() {
     ],
   },
   {
+    label: "Workflow",
+    items: [
+      { title: "Feature Requests", url: `/${orgSlug}/projects`, icon: MessageSquarePlus },
+      { title: "PRDs", url: `/${orgSlug}/projects`, icon: FileText },
+      { title: "Tasks", url: `/${orgSlug}/projects`, icon: CheckSquare },
+    ],
+  },
+  {
+    label: "Engineering",
+    items: [
+      { title: "GitHub", url: `/${orgSlug}/projects`, icon: GitBranch },
+      { title: "Pull Requests", url: `/${orgSlug}/projects`, icon: GitPullRequest },
+      { title: "Reviews", url: `/${orgSlug}/projects`, icon: CheckCircle },
+    ],
+  },
+  {
     label: "Settings",
     items: [
       { title: "Billing", url: `/${orgSlug}/billing`, icon: CreditCard },
+      { title: "Settings", url: `/${orgSlug}/billing`, icon: Settings },
     ],
   },
 ];
