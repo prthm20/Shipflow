@@ -50,7 +50,7 @@ export default function ApprovalPage() {
 
   const latestReview = reviews?.[0];
   const passedReview = latestReview?.passed;
-  const doneTasks = tasks?.filter((t) => t.status === "DONE").length ?? 0;
+  const doneTasks = tasks?.filter((t: { status: string }) => t.status === "DONE").length ?? 0;
   const totalTasks = tasks?.length ?? 0;
 
   return (
