@@ -10,6 +10,7 @@
     
   },
   "dependencies": {
+    "lightningcss-linux-x64-gnu": "^1.19.0",
     "@ai-sdk/anthropic": "^3.0.85",
     "@ai-sdk/openai": "^3.0.74",
     "@octokit/rest": "^22.0.1",
