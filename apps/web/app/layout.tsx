@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/components/providers";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,7 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning  >
+     
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -36,6 +38,8 @@ export default function RootLayout({
             <Toaster />
           </TooltipProvider>
         </Providers>
+        <script src="https://checkout.razorpay.com/v1/checkout.js" async />
+
       </body>
     </html>
   );

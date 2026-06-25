@@ -7,6 +7,7 @@ import { taskRouter } from "./routers/task";
 import { githubRouter } from "./routers/github";
 import { reviewRouter } from "./routers/review";
 import { approvalRouter } from "./routers/approval";
+import { billingRouter } from "./routers/billing";
 export const appRouter = createTRPCRouter({
   healthcheck: publicProcedure.query(() => {
     return { status: "ok", timestamp: new Date().toISOString() };
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
    github: githubRouter,
    review: reviewRouter,
    approval: approvalRouter,
+   billing: billingRouter,
 });
 console.log("Router keys:", Object.keys(appRouter._def.procedures));
 export type AppRouter = typeof appRouter;
