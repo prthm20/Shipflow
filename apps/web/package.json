@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --no-turbopack",
     "start": "next start",
-    "lint": "eslint",
-    "postinstall": "cd ../.. && npm install --ignore-scripts"
+    "lint": "next lint"
+    
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.85",
