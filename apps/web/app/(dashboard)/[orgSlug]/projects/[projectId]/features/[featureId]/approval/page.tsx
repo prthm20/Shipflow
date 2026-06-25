@@ -140,11 +140,10 @@ export default function ApprovalPage() {
                 <p className="text-sm text-muted-foreground">{latestReview.summary}</p>
                 <div className="flex gap-2 mt-3">
                   <Badge variant="outline">
-                    {latestReview.issues.filter((i) => i.severity === "BLOCKING").length} blocking
+                 {latestReview.issues.filter((i: { severity: string }) => i.severity === "BLOCKING").length} blocking
                   </Badge>
                   <Badge variant="outline">
-                    {latestReview.issues.filter((i) => i.severity === "NON_BLOCKING").length} non-blocking
-                  </Badge>
+{latestReview.issues.filter((i: { severity: string }) => i.severity === "NON_BLOCKING").length} non-blocking                  </Badge>
                 </div>
               </CardContent>
             </Card>
