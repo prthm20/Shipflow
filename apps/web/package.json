@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "cd ../.. && npm install --ignore-scripts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.85",
